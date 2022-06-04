@@ -1,5 +1,11 @@
 # we build this docker based on a docker with ros already installed
 FROM ros:melodic-perception
+#添加国内源，解决connection failed问题
+RUN sed -i s:/archive.ubuntu.com:/mirrors.tuna.tsinghua.edu.cn/ubuntu:g /etc/apt/sources.list
+RUN cat /etc/apt/sources.list
+RUN apt-get clean
+RUN apt-get -y update --fix-missing
+
 # fixed a key issue using the method mentioned in https://github.com/PRBonn/bonnetal/commit/0ab883b8356954c3e57a07a73c30bbac8f035a05
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
@@ -38,10 +44,10 @@ RUN curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py
 RUN python get-pip.py
 RUN rm get-pip.py
 RUN pip --version
-RUN pip install pybullet==3.1.7
-RUN pip install tensorflow==1.15.4
-RUN pip install numpy==1.17.3
-RUN pip install scipy
+RUN pip install pybullet==3.1.7 -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install tensorflow==1.15.4 -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install numpy==1.17.3 -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install scipy -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 # install cmake 3.20 
